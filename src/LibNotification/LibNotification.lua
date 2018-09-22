@@ -3,74 +3,9 @@ local MAJOR, MINOR = "LibNotifications", 999 -- only for test purposes. releases
 local libNotification, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not libNotification then return end --the same or newer version of this lib is already loaded into memory
 
-local KEYBOARD_NOTIFICATION_ICONS = { -- copied from notifications_keyboard.lua
-    [NOTIFICATION_TYPE_FRIEND] = "EsoUI/Art/Notifications/notificationIcon_friend.dds",
-    [NOTIFICATION_TYPE_GUILD] = "EsoUI/Art/Notifications/notificationIcon_guild.dds",
-    [NOTIFICATION_TYPE_GUILD_MOTD] = "EsoUI/Art/Notifications/notificationIcon_guild.dds",
-    [NOTIFICATION_TYPE_CAMPAIGN_QUEUE] = "EsoUI/Art/Notifications/notificationIcon_campaignQueue.dds",
-    [NOTIFICATION_TYPE_RESURRECT] = "EsoUI/Art/Notifications/notificationIcon_resurrect.dds",
-    [NOTIFICATION_TYPE_GROUP] = "EsoUI/Art/Notifications/notificationIcon_group.dds",
-    [NOTIFICATION_TYPE_TRADE] = "EsoUI/Art/Notifications/notificationIcon_trade.dds",
-    [NOTIFICATION_TYPE_QUEST_SHARE] = "EsoUI/Art/Notifications/notificationIcon_quest.dds",
-    [NOTIFICATION_TYPE_PLEDGE_OF_MARA] = "EsoUI/Art/Notifications/notificationIcon_mara.dds",
-    [NOTIFICATION_TYPE_CUSTOMER_SERVICE] = "EsoUI/Art/Notifications/notification_cs.dds",
-    [NOTIFICATION_TYPE_LEADERBOARD] = "EsoUI/Art/Notifications/notificationIcon_leaderboard.dds",
-    [NOTIFICATION_TYPE_COLLECTIONS] = "EsoUI/Art/Notifications/notificationIcon_collections.dds",
-    [NOTIFICATION_TYPE_LFG] = "EsoUI/Art/Notifications/notificationIcon_group.dds",
-    [NOTIFICATION_TYPE_POINTS_RESET] = "EsoUI/Art/MenuBar/Gamepad/gp_playerMenu_icon_character.dds",
-    [NOTIFICATION_TYPE_CRAFT_BAG_AUTO_TRANSFER] = "EsoUI/Art/Notifications/notificationIcon_autoTransfer.dds",
-    [NOTIFICATION_TYPE_GROUP_ELECTION] = "EsoUI/Art/Notifications/notificationIcon_autoTransfer.dds",
-    [NOTIFICATION_TYPE_DUEL] = "EsoUI/Art/Notifications/notificationIcon_duel.dds",
-    [NOTIFICATION_TYPE_ESO_PLUS_SUBSCRIPTION] = "EsoUI/Art/Notifications/notificationIcon_ESO+.dds",
-    [NOTIFICATION_TYPE_GIFTING_UNLOCKED] = "EsoUI/Art/Notifications/notificationIcon_gift.dds",
-    [NOTIFICATION_TYPE_GIFT_RECEIVED] = "EsoUI/Art/Notifications/notificationIcon_gift.dds",
-    [NOTIFICATION_TYPE_GIFT_CLAIMED] = "EsoUI/Art/Notifications/notificationIcon_gift.dds",
-    [NOTIFICATION_TYPE_GIFT_RETURNED] = "EsoUI/Art/Notifications/notificationIcon_gift.dds",
-    [NOTIFICATION_TYPE_NEW_DAILY_LOGIN_REWARD] = "EsoUI/Art/Notifications/notificationIcon_dailyLoginRewards.dds",
-}
-
-local GAMEPAD_NOTIFICATION_ICONS = { -- copied from notifications_gamepad.lua
-    [NOTIFICATION_TYPE_FRIEND] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_friend.dds",
-    [NOTIFICATION_TYPE_GUILD] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_guild.dds",
-    [NOTIFICATION_TYPE_GUILD_MOTD] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_guild.dds",
-    [NOTIFICATION_TYPE_CAMPAIGN_QUEUE] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_campaignQueue.dds",
-    [NOTIFICATION_TYPE_RESURRECT] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_resurrect.dds",
-    [NOTIFICATION_TYPE_GROUP] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_group.dds",
-    [NOTIFICATION_TYPE_TRADE] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_trade.dds",
-    [NOTIFICATION_TYPE_QUEST_SHARE] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_quest.dds",
-    [NOTIFICATION_TYPE_PLEDGE_OF_MARA] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_mara.dds",
-    [NOTIFICATION_TYPE_CUSTOMER_SERVICE] = "EsoUI/Art/Notifications/Gamepad/gp_notification_cs.dds",
-    [NOTIFICATION_TYPE_LEADERBOARD] = "EsoUI/Art/Notifications/Gamepad/gp_notification_leaderboardAccept_down.dds",
-    [NOTIFICATION_TYPE_COLLECTIONS] = "EsoUI/Art/MenuBar/Gamepad/gp_playerMenu_icon_collections.dds",
-    [NOTIFICATION_TYPE_LFG] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_group.dds",
-    [NOTIFICATION_TYPE_POINTS_RESET] = "EsoUI/Art/MenuBar/Gamepad/gp_playerMenu_icon_character.dds",
-    [NOTIFICATION_TYPE_CRAFT_BAG_AUTO_TRANSFER] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_autoTransfer.dds",
-    [NOTIFICATION_TYPE_GROUP_ELECTION] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_autoTransfer.dds",
-    [NOTIFICATION_TYPE_DUEL] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_duel.dds",
-    [NOTIFICATION_TYPE_ESO_PLUS_SUBSCRIPTION] = "EsoUI/Art/Notifications/Gamepad/gp_notification_ESO+.dds",
-    [NOTIFICATION_TYPE_GIFTING_UNLOCKED] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_gift.dds",
-    [NOTIFICATION_TYPE_GIFT_RECEIVED] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_gift.dds",
-    [NOTIFICATION_TYPE_GIFT_CLAIMED] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_gift.dds",
-    [NOTIFICATION_TYPE_GIFT_RETURNED] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_gift.dds",
-    [NOTIFICATION_TYPE_NEW_DAILY_LOGIN_REWARD] = "EsoUI/Art/Notifications/Gamepad/gp_notificationIcon_dailyLoginRewards.dds",
-}
-
-local DATA_TYPE_TO_TEMPLATE = { -- also copied from notifications_gamepad.lua
-    [NOTIFICATIONS_REQUEST_DATA] = "ZO_GamepadNotificationsRequestRow",
-    [NOTIFICATIONS_YES_NO_DATA] = "ZO_GamepadNotificationsYesNoRow",
-    [NOTIFICATIONS_WAITING_DATA] = "ZO_GamepadNotificationsWaitingRow",
-    [NOTIFICATIONS_LEADERBOARD_DATA] = "ZO_GamepadNotificationsLeaderboardRow",
-    [NOTIFICATIONS_ALERT_DATA] = "ZO_GamepadNotificationsAlertRow",
-    [NOTIFICATIONS_COLLECTIBLE_DATA] = "ZO_GamepadNotificationsCollectibleRow",
-    [NOTIFICATIONS_LFG_READY_CHECK_DATA] = "ZO_GamepadNotificationsLFGReadyCheckRow",
-    [NOTIFICATIONS_LFG_FIND_REPLACEMENT_DATA] = "ZO_GamepadNotificationsLFGFindReplacementRow",
-    [NOTIFICATIONS_ESO_PLUS_SUBSCRIPTION_DATA] = "ZO_GamepadNotificationsEsoPlusSubscriptionRow",
-    [NOTIFICATIONS_GIFT_RECEIVED_DATA] = "ZO_GamepadNotificationsGiftReceivedRow",
-    [NOTIFICATIONS_GIFT_RETURNED_DATA] = "ZO_GamepadNotificationsGiftReturnedRow",
-    [NOTIFICATIONS_GIFT_CLAIMED_DATA] = "ZO_GamepadNotificationsGiftClaimedRow",
-    [NOTIFICATIONS_GIFTING_UNLOCKED_DATA] = "ZO_GamepadNotificationsGiftingUnlockedRow",
-    [NOTIFICATIONS_NEW_DAILY_LOGIN_REWARD_DATA] = "ZO_GamepadNotificationsNewDailyLoginRewardRow",
-}
+local KEYBOARD_NOTIFICATION_ICONS = ZO_KEYBOARD_NOTIFICATION_ICONS
+local GAMEPAD_NOTIFICATION_ICONS = ZO_GAMEPAD_NOTIFICATION_ICONS
+local DATA_TYPE_TO_TEMPLATE = ZO_NOTIFICATION_TYPE_TO_GAMEPAD_TEMPLATE
 
 --==========================================================================--
 --=== OVERRIDES ===--
