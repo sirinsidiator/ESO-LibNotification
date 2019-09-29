@@ -2,6 +2,7 @@
 local MAJOR, MINOR = "LibNotifications", 999 -- only for test purposes. releases will get a smaller number
 local libNotification, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not libNotification then return end --the same or newer version of this lib is already loaded into memory
+LibNotifications = libNotification
 
 local KEYBOARD_NOTIFICATION_ICONS = ZO_KEYBOARD_NOTIFICATION_ICONS
 local GAMEPAD_NOTIFICATION_ICONS = ZO_GAMEPAD_NOTIFICATION_ICONS
