@@ -1,8 +1,15 @@
---Register LAM with LibStub
 local MAJOR, MINOR = "LibNotifications", 999 -- only for test purposes. releases will get a smaller number
-local libNotification, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
-if not libNotification then return end --the same or newer version of this lib is already loaded into memory
-LibNotifications = libNotification
+assert(not _G[MAJOR], MAJOR .. " is already loaded")
+
+local libNotification
+if(LibStub) then
+    --Register LN with LibStub
+    libNotification  = LibStub:NewLibrary(MAJOR, MINOR)
+    if not libNotification then return end --the same or newer version of this lib is already loaded into memory
+else
+    libNotification = {}
+end
+_G[MAJOR] = libNotification
 
 local KEYBOARD_NOTIFICATION_ICONS = ZO_KEYBOARD_NOTIFICATION_ICONS
 local GAMEPAD_NOTIFICATION_ICONS = ZO_GAMEPAD_NOTIFICATION_ICONS
@@ -82,7 +89,7 @@ function libNotificationKeyboardProvider:Accept(data)
 end
 
 function libNotificationKeyboardProvider:Decline(data, button, openedFromKeybind)
-    -- there was a typo in the field name. for backwards compatibility we have to keep both 
+    -- there was a typo in the field name. for backwards compatibility we have to keep both
     local callback = data.keyboardDeclineCallback or data.keybaordDeclineCallback
     if callback then
         callback(data)
