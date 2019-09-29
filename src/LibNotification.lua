@@ -81,8 +81,10 @@ function libNotificationKeyboardProvider:Accept(data)
 end
 
 function libNotificationKeyboardProvider:Decline(data, button, openedFromKeybind)
-    if data.keybaordDeclineCallback then
-        data.keybaordDeclineCallback(data)
+    -- there was a typo in the field name. for backwards compatibility we have to keep both 
+    local callback = data.keyboardDeclineCallback or data.keybaordDeclineCallback
+    if callback then
+        callback(data)
     end
 end
 
