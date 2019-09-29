@@ -3,6 +3,7 @@
 ## Version: VERSION_NUMBER
 ## AddOnVersion: VERSION_NUMBER
 ## APIVersion: 100024 100025
+## IsLibrary: true
 ## OptionalDependsOn: LibStub
 ##
 ## This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates. 
