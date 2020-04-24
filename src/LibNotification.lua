@@ -10,6 +10,7 @@ else
     libNotification = {}
 end
 _G[MAJOR] = libNotification
+LibNotification = libNotification
 
 local KEYBOARD_NOTIFICATION_ICONS = ZO_KEYBOARD_NOTIFICATION_ICONS
 local GAMEPAD_NOTIFICATION_ICONS = ZO_GAMEPAD_NOTIFICATION_ICONS
