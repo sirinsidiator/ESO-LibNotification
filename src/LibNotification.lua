@@ -37,7 +37,7 @@ end
 -- Override so we can set our own texture & heading
 function GAMEPAD_NOTIFICATIONS:AddDataEntry(dataType, data, isHeader)
     local texture     = data.texture or GAMEPAD_NOTIFICATION_ICONS[data.notificationType]
-    local headingText = data.heading or zo_strformat(SI_GAMEPAD_NOTIFICATIONS_TYPE_FORMATTER, GetString("SI_NOTIFICATIONTYPE", data.notificationType))
+    local headingText = data.heading or zo_strformat(SI_NOTIFICATIONS_TYPE_FORMATTER, GetString("SI_NOTIFICATIONTYPE", data.notificationType))
 
     local entryData = ZO_GamepadEntryData:New(data.shortDisplayText, texture)
     entryData.data  = data
