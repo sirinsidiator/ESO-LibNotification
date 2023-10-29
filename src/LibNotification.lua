@@ -30,6 +30,16 @@ function NOTIFICATIONS:SetupBaseRow(control, data)
     control.notificationType = notificationType
     control.index            = data.index
 
+    if data.acceptText == nil then
+        data.acceptText = control.acceptText
+    end
+
+    if data.declineText == nil then
+        data.declineText = control.declineText
+    end
+
+    control.data = data
+
     GetControl(control, "Icon"):SetTexture(texture)
     GetControl(control, "Type"):SetText(headingText)
 end
