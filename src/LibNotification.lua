@@ -1,15 +1,8 @@
-local MAJOR, MINOR = "LibNotifications", 999 -- only for test purposes. releases will get a smaller number
-assert(not _G[MAJOR], MAJOR .. " is already loaded")
+local LIB_NAME = "LibNotifications"
+assert(not _G[LIB_NAME], LIB_NAME .. " is already loaded")
 
-local libNotification
-if(LibStub) then
-    --Register LN with LibStub
-    libNotification  = LibStub:NewLibrary(MAJOR, MINOR)
-    if not libNotification then return end --the same or newer version of this lib is already loaded into memory
-else
-    libNotification = {}
-end
-_G[MAJOR] = libNotification
+local libNotification = {}
+_G[LIB_NAME] = libNotification
 LibNotification = libNotification
 
 local KEYBOARD_NOTIFICATION_ICONS = ZO_KEYBOARD_NOTIFICATION_ICONS
