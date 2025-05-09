@@ -1,3 +1,7 @@
+-- SPDX-FileCopyrightText: 2025 sirinsidiator
+--
+-- SPDX-License-Identifier: Artistic-2.0
+
 local LIB_NAME = "LibNotifications"
 assert(not _G[LIB_NAME], LIB_NAME .. " is already loaded")
 
