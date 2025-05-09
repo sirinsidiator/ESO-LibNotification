@@ -13,34 +13,38 @@ local DATA_TYPE_TO_TEMPLATE = ZO_NOTIFICATION_TYPE_TO_GAMEPAD_TEMPLATE
 --=== OVERRIDES ===--
 --==========================================================================--
 -- Override so we can set our own texture & heading
-function NOTIFICATIONS:SetupBaseRow(control, data)
-    ZO_SortFilterList.SetupRow(self.sortFilterList, control, data)
+if NOTIFICATIONS then
+    function NOTIFICATIONS:SetupBaseRow(control, data)
+        ZO_SortFilterList.SetupRow(self.sortFilterList, control, data)
 
-    local notificationType = data.notificationType
-    local texture          = data.texture or KEYBOARD_NOTIFICATION_ICONS[notificationType]
-    local headingText      = data.heading or zo_strformat(SI_NOTIFICATIONS_TYPE_FORMATTER, GetString("SI_NOTIFICATIONTYPE", notificationType))
+        local notificationType   = data.notificationType
+        local texture            = data.texture or KEYBOARD_NOTIFICATION_ICONS[notificationType]
+        local headingText        = data.heading or
+        zo_strformat(SI_NOTIFICATIONS_TYPE_FORMATTER, GetString("SI_NOTIFICATIONTYPE", notificationType))
 
-    control.notificationType = notificationType
-    control.index            = data.index
+        control.notificationType = notificationType
+        control.index            = data.index
 
-    if data.acceptText == nil then
-        data.acceptText = control.acceptText
+        if data.acceptText == nil then
+            data.acceptText = control.acceptText
+        end
+
+        if data.declineText == nil then
+            data.declineText = control.declineText
+        end
+
+        control.data = data
+
+        GetControl(control, "Icon"):SetTexture(texture)
+        GetControl(control, "Type"):SetText(headingText)
     end
-
-    if data.declineText == nil then
-        data.declineText = control.declineText
-    end
-
-    control.data = data
-
-    GetControl(control, "Icon"):SetTexture(texture)
-    GetControl(control, "Type"):SetText(headingText)
 end
 
 -- Override so we can set our own texture & heading
 function GAMEPAD_NOTIFICATIONS:AddDataEntry(dataType, data, isHeader)
     local texture     = data.texture or GAMEPAD_NOTIFICATION_ICONS[data.notificationType]
-    local headingText = data.heading or zo_strformat(SI_NOTIFICATIONS_TYPE_FORMATTER, GetString("SI_NOTIFICATIONTYPE", data.notificationType))
+    local headingText = data.heading or
+    zo_strformat(SI_NOTIFICATIONS_TYPE_FORMATTER, GetString("SI_NOTIFICATIONTYPE", data.notificationType))
 
     local entryData = ZO_GamepadEntryData:New(data.shortDisplayText, texture)
     entryData.data  = data
@@ -100,7 +104,6 @@ function libNotificationKeyboardProvider:Decline(data, button, openedFromKeybind
     end
 end
 
-
 --==========================================================================--
 --=== Gamepad Provider ===--
 --==========================================================================--
@@ -128,20 +131,27 @@ end
 --=== LIBRARY FUNCTIONS ===--
 --=============================================================--
 function libNotification:CreateProvider()
-    local keyboardProvider = libNotificationKeyboardProvider:New(NOTIFICATIONS)
-    local gamepadProvider  = libNotificationGamepadProvider:New(GAMEPAD_NOTIFICATIONS)
+    local keyboardProvider = nil
+    if NOTIFICATIONS then
+        keyboardProvider = libNotificationKeyboardProvider:New(NOTIFICATIONS)
+    end
+    local gamepadProvider = libNotificationGamepadProvider:New(GAMEPAD_NOTIFICATIONS)
 
-    local provider = {
+    local provider        = {
         notifications       = {},
         keyboardProvider    = keyboardProvider,
         gamepadProvider     = gamepadProvider,
         UpdateNotifications = function()
-            keyboardProvider:pushUpdateCallback()
+            if keyboardProvider then
+                keyboardProvider:pushUpdateCallback()
+            end
             gamepadProvider:pushUpdateCallback()
         end,
     }
-    keyboardProvider.providerLinkTable = provider
-    gamepadProvider.providerLinkTable  = provider
+    if keyboardProvider then
+        keyboardProvider.providerLinkTable = provider
+    end
+    gamepadProvider.providerLinkTable = provider
 
     return provider
 end
