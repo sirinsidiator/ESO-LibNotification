@@ -35,6 +35,9 @@ if NOTIFICATIONS then
 
         control.data = data
 
+        if type(texture) == "function" then
+            texture = texture(data)
+        end
         GetControl(control, "Icon"):SetTexture(texture)
         GetControl(control, "Type"):SetText(headingText)
     end
@@ -46,6 +49,9 @@ function GAMEPAD_NOTIFICATIONS:AddDataEntry(dataType, data, isHeader)
     local headingText = data.heading or
     zo_strformat(SI_NOTIFICATIONS_TYPE_FORMATTER, GetString("SI_NOTIFICATIONTYPE", data.notificationType))
 
+    if type(texture) == "function" then
+        texture = texture(data)
+    end
     local entryData = ZO_GamepadEntryData:New(data.shortDisplayText, texture)
     entryData.data  = data
     entryData:SetIconTintOnSelection(true)
